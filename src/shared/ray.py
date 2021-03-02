@@ -393,6 +393,8 @@ def areSameOscPort(url1, url2):
 
 
 def areOnSameMachine(url1, url2):
+    print('areOnSameMachine', url1, url2)
+    
     if url1 == url2:
         return True
 
@@ -402,18 +404,30 @@ def areOnSameMachine(url1, url2):
     except BaseException:
         return False
 
+    print('areOn2', address1.hostname, address2.hostname)
+
     if address1.hostname == address2.hostname:
         return True
 
+    print('areOn3',
+          socket.gethostbyname(address1.hostname),
+          socket.gethostbyname(address2.hostname))
+    
+    print('areOn4',
+          socket.gethostbyaddr(address1.hostname),
+          socket.gethostbyaddr(address2.hostname))
+
     try:
-        if ((socket.gethostbyname(address1.hostname) in ('127.0.0.1', '127.0.1.1')) and (
-                socket.gethostbyname(address2.hostname) in ('127.0.0.1', '127.0.1.1'))):
+        if ((socket.gethostbyname(address1.hostname)
+                    in ('127.0.0.1', '127.0.1.1'))
+                and (socket.gethostbyname(address2.hostname)
+                    in ('127.0.0.1', '127.0.1.1'))):
             return True
 
-        if socket.gethostbyaddr(
-                address1.hostname) == socket.gethostbyaddr(
-                address2.hostname):
+        if (socket.gethostbyaddr(address1.hostname)
+                    == socket.gethostbyaddr(address2.hostname)):
             return True
+
     except BaseException:
         try:
             ips = subprocess.check_output(['hostname', '-I']).decode()
